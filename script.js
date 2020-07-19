@@ -1,36 +1,65 @@
 let obj;
 let getAmount = 1;
   window.onload = function() {
-    var request = new XMLHttpRequest();
-        request.open("GET","https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json");
-        request.onreadystatechange = function(){
-
-          if(request.readyState === 4 && request.status === 200) {
-            obj = JSON.parse(request.responseText);
+    
+    $.ajax({
+      type: "GET",
+      url: 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json', 
+      dataType : "json",
+      success: function (data) { 
+            let i = 0;
+            obj = data;
             for (let value of Object.values(obj)) {
-              $("#currencies").append('<option value="' + value['cc'] + '">');
-              //console.log(typeof(value['rate']));
+                $("#table" + getAmount + " thead tr").append("<td>" + value['cc'] + "</td>");
+                $("#table" + getAmount + " tbody tr").append("<td>" + value['rate'] + "</td>");
+                i++;
+              if (i == 9){
+                getAmount += 1;
+                $("#result").append('<table id="table' + getAmount + '"><thead><tr></tr></thead><tbody><tr></tr></tbody></table><br>');
+                i=0;
+              }
             }
+
           }
-        }
-      request.send(null);
-};
-
-$('#test_input').on('input', function() {
-  for (let item of Object.values(obj)) {
-    if ($(this).val() == item['cc']) {
-      $("h3").html("Текущий курс: " + getAmount + " " + item['cc'] + " = " + item['rate'] * getAmount + " " + " грн.");
-    }
+    });
   };
-})
 
-$('#amount').on('input', function() {
-  getAmount = $(this).val()
-  if (getAmount === '' || !isFinite(getAmount)) {
-    getAmount = 1;
-  }
+  $('#name').on('input', function() {
+
+    let str = $(this).val().toUpperCase();
+    
+    if(str == ""){
+
+      let j = 1;
+      $("#table1 tr").remove();
+      $("#table1 thead").append("<tr></tr>");
+      $("#table1 tbody").append("<tr></tr>");
+
+      for (let item of Object.values(obj)) {
+        if (j<10) {
+          $("#table1 thead tr").append("<td>" + item['cc'] + "</td>");
+          $("#table1 tbody tr").append("<td>" + item['rate'] + "</td>"); 
+          j++;
+        }
+      }
+      return $("table").show(); 
+
+    } else {
+
+      $("table").hide(); 
+      $("#table1 tr").remove();
+      $("#table1 thead").append("<tr></tr>");
+      $("#table1 tbody").append("<tr></tr>");
+
+      for (let item of Object.values(obj)) {
+        if (item['cc'].startsWith(str)) {
+          $("#table1 thead tr").append("<td>" + item['cc'] + "</td>");
+          $("#table1 tbody tr").append("<td>" + item['rate'] + "</td>");
+          $("#table1").show();
+        }
+      };
+    };
  
-})
-  
+  })
 
 
