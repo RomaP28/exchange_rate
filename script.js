@@ -1,7 +1,6 @@
-let obj;
-let getAmount = 1;
-  window.onload = function() {
-    
+  $(document).ready(function() {
+    let obj;
+    let getAmount = 1;
     $.ajax({
       type: "GET",
       url: 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json', 
@@ -22,44 +21,46 @@ let getAmount = 1;
 
           }
     });
-  };
 
-  $('#name').on('input', function() {
+    $('#name').on('input', function() {
 
-    let str = $(this).val().toUpperCase();
-    
-    if(str == ""){
-
-      let j = 1;
-      $("#table1 tr").remove();
-      $("#table1 thead").append("<tr></tr>");
-      $("#table1 tbody").append("<tr></tr>");
-
-      for (let item of Object.values(obj)) {
-        if (j<10) {
-          $("#table1 thead tr").append("<td>" + item['cc'] + "</td>");
-          $("#table1 tbody tr").append("<td>" + item['rate'] + "</td>"); 
-          j++;
+      let str = $(this).val().toUpperCase();
+      
+      if(str == ""){
+  
+        let j = 1;
+        $("#table1 tr").remove();
+        $("#table1 thead").append("<tr></tr>");
+        $("#table1 tbody").append("<tr></tr>");
+  
+        for (let item of Object.values(obj)) {
+          if (j < 10) {
+            $("#table1 thead tr").append("<td>" + item['cc'] + "</td>");
+            $("#table1 tbody tr").append("<td>" + item['rate'] + "</td>"); 
+            j++;
+          }
         }
-      }
-      return $("table").show(); 
-
-    } else {
-
-      $("table").hide(); 
-      $("#table1 tr").remove();
-      $("#table1 thead").append("<tr></tr>");
-      $("#table1 tbody").append("<tr></tr>");
-
-      for (let item of Object.values(obj)) {
-        if (item['cc'].startsWith(str)) {
-          $("#table1 thead tr").append("<td>" + item['cc'] + "</td>");
-          $("#table1 tbody tr").append("<td>" + item['rate'] + "</td>");
-          $("#table1").show();
-        }
+        return $("table").show(); 
+  
+      } else {
+  
+        $("table").hide(); 
+        $("#table1 tr").remove();
+        $("#table1 thead").append("<tr></tr>");
+        $("#table1 tbody").append("<tr></tr>");
+  
+        for (let item of Object.values(obj)) {
+          if (item['cc'].startsWith(str)) {
+            $("#table1 thead tr").append("<td>" + item['cc'] + "</td>");
+            $("#table1 tbody tr").append("<td>" + item['rate'] + "</td>");
+            $("#table1").show();
+          }
+        };
       };
-    };
- 
-  })
+   
+    })
+  });
+
+
 
 
